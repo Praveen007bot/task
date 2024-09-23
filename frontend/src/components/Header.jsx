@@ -27,6 +27,7 @@ const Header = () => {
           <Link to={"/addgoal"}>Add goal</Link>
           <Link to={"/focusmode"}>Focus mode</Link>
           <Link to={"/history"}>History</Link>
+          <Link to={"/about"}>About</Link>
         </div>
         {isLoggedIn ? (
           <Link to={'/profile'}>

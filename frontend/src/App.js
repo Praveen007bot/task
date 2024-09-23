@@ -6,6 +6,8 @@ import AddGoals from "./components/AddGoals";
 import Goals from "./components/Goals";
 import FocusMode from "./components/FocusMode";
 import Profile from "./components/Profile";
+import History from "./components/History";
+import About from "./components/About";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/goals" element={<Goals />} />
           <Route path="/focusmode" element={<FocusMode />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path='/history' element={<History />} />
+          <Route path='/about' element={<About />} />
         </Routes>
       </BrowserRouter>
     </div>
