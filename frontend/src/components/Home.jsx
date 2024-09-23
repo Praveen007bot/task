@@ -25,9 +25,8 @@ export default function Landing() {
                       Your story starts with us.
                     </h1>
                     <p className="mt-4 text-lg text-gray-300">
-                      This is a simple example of a Landing Page you can build
-                      using Tailwind Starter Kit. It features multiple CSS
-                      components based on the Tailwindcss design system.
+                    Set challenging yet achievable goals and continually strive to improve them.
+                    Plan carefully, execute effectively, and monitor progress to achieve project goals.
                     </p>
                   </div>
                 </div>

@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const {authUser} = useSelector(store => store.user)
+  useEffect(() => {
+    if (authUser) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [authUser]);
+  
+
+  const [isLogin, setIsLogin] = useState(false);
+
+
+  
+
   return (
     <nav
       className={
@@ -148,22 +164,48 @@ export default function Navbar(props) {
               </a>
             </li>
 
-            <li className="flex items-center">
-              <Link to={'/login'}>
-                <button
-                  className={
-                    (props.transparent
-                      ? "bg-white text-gray-800 active:bg-gray-100"
-                      : "bg-pink-500 text-white active:bg-pink-600") +
-                    " text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3"
-                  }
-                  type="button"
-                  style={{ transition: "all .15s ease" }}
-                >
-                  login <i className=" ml-2 fas fa-arrow-alt-circle-right"></i>
-                </button>
-              </Link>
-            </li>
+            {isLogin ? (
+              <>
+                <li className="flex items-center">
+                  <Link to={"/profile"}>
+                    <button
+                      className={
+                        (props.transparent
+                          ? "bg-white text-gray-800 active:bg-gray-100"
+                          : "bg-pink-500 text-white active:bg-pink-600") +
+                        " text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3"
+                      }
+                      type="button"
+                      style={{ transition: "all .15s ease" }}
+                    >
+                      
+                      <i className=" mr-4 fas fa-user"></i>
+                      {authUser.username}
+                    </button>
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="flex items-center">
+                  <Link to={"/login"}>
+                    <button
+                      className={
+                        (props.transparent
+                          ? "bg-white text-gray-800 active:bg-gray-100"
+                          : "bg-pink-500 text-white active:bg-pink-600") +
+                        " text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3"
+                      }
+                      type="button"
+                      style={{ transition: "all .15s ease" }}
+                    >
+                      login{" "}
+                      <i className=" ml-2 fas fa-arrow-alt-circle-right"></i>
+                    </button>
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

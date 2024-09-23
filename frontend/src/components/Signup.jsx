@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import registerBg from "../assets/img/register_bg_2.png";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const Signup = () => {
-
-  const navigate = useNavigate()
+export default function Signup() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -19,8 +20,13 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    handleLogin();
+  };
+
+  const handleLogin = async () => {
+    setLoading(true);
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/user/register",
@@ -29,98 +35,184 @@ const Signup = () => {
       if (res.data.success) {
         navigate("/login");
         toast.success(res.data.message);
+      } else {
+        toast.error(res.data.message || "Signup failed");
       }
     } catch (error) {
+      toast.error("An error occurred while Signup in.");
       console.log(error);
-      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-    // Handle signup logic here
-    console.log("Form data submitted:", formData);
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold text-center">Sign Up</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Username */}
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter your username"
-            />
-          </div>
+    <>
+      <main>
+        <section className="absolute w-full h-full">
+          <div
+            className="absolute top-0 w-full h-full bg-gray-900"
+            style={{
+              backgroundImage: `url(${registerBg})`,
+              backgroundSize: "100%",
+              backgroundRepeat: "no-repeat",
+            }}
+          ></div>
+          <div className="container mx-auto px-4 h-full">
+            <div className="flex content-center items-center justify-center h-full">
+              <div className="w-full lg:w-4/12 px-4">
+                <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 border-0">
+                  <div className="rounded-t mb-0 px-6 py-6">
+                    <div className="text-center mb-3">
+                      <h6 className="text-gray-600 text-sm font-bold">
+                        Sign in with
+                      </h6>
+                    </div>
+                    <div className="btn-wrapper text-center">
+                      <button
+                        className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
+                        type="button"
+                        style={{ transition: "all .15s ease" }}
+                      >
+                        <img
+                          alt="..."
+                          className="w-5 mr-1"
+                          src={require("../assets/img/github.svg").default}
+                        />
+                        Github
+                      </button>
+                      <button
+                        className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
+                        type="button"
+                        style={{ transition: "all .15s ease" }}
+                      >
+                        <img
+                          alt="..."
+                          className="w-5 mr-1"
+                          src={require("../assets/img/google.svg").default}
+                        />
+                        Google
+                      </button>
+                    </div>
+                    <hr className="mt-6 border-b-1 border-gray-400" />
+                  </div>
+                  <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+                    <div className="text-gray-500 text-center mb-3 font-bold">
+                      <small>Or sign in with credentials</small>
+                    </div>
+                    <form onSubmit={handleSubmit}>
+                      <div className="relative w-full mb-3">
+                        <label
+                          className="block uppercase text-gray-700 text-xs font-bold mb-2"
+                          htmlFor="grid-password"
+                        >
+                          Username
+                        </label>
+                        <input
+                          type="username"
+                          name="username"
+                          value={formData.username}
+                          onChange={handleChange}
+                          className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+                          placeholder="Username"
+                          style={{ transition: "all .15s ease" }}
+                        />
+                      </div>
 
-          {/* Email */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter your email"
-            />
-          </div>
+                      <div className="relative w-full mb-3">
+                        <label
+                          className="block uppercase text-gray-700 text-xs font-bold mb-2"
+                          htmlFor="grid-password"
+                        >
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+                          placeholder="Email"
+                          style={{ transition: "all .15s ease" }}
+                        />
+                      </div>
 
-          {/* Password */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter your password"
-            />
-          </div>
-          <div>
-            <p>
-              Already have an account.
-              <Link className="text-blue-700 font-medium" to={"/login"}>
-                Login
-              </Link>
-            </p>
-          </div>
+                      <div className="relative w-full mb-3">
+                        <label
+                          className="block uppercase text-gray-700 text-xs font-bold mb-2"
+                          htmlFor="grid-password"
+                        >
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          name="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                          className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+                          placeholder="Password"
+                          style={{ transition: "all .15s ease" }}
+                        />
+                      </div>
+                      <div>
+                        <label className="inline-flex items-center cursor-pointer">
+                          <input
+                            id="customCheckLogin"
+                            type="checkbox"
+                            className="form-checkbox border-0 rounded text-gray-800 ml-1 w-5 h-5"
+                            style={{ transition: "all .15s ease" }}
+                          />
+                          <span className="ml-2 text-sm font-semibold text-gray-700">
+                            Remember me
+                          </span>
+                        </label>
+                      </div>
 
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            Sign Up
-          </button>
-        </form>
-      </div>
-    </div>
+                      <div className="text-center mt-6">
+                        <button
+                          onClick={handleLogin}
+                          disabled={loading}
+                          className={`bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ${
+                            loading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                          style={{ transition: "all .15s ease" }}
+                        >
+                          {loading ? "Signing In..." : "Sign In"}
+                        </button>
+                      </div>
+                    </form>
+                    <div className="flex flex-wrap mt-6">
+                      <div className=" text-right">
+                        <small>Already have an account <Link className="text-blue-600 font-bold" to={'/login'}>Login</Link></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap mt-6">
+                  <div className="w-1/2">
+                    <a
+                      href="#pablo"
+                      onClick={(e) => e.preventDefault()}
+                      className="text-gray-300"
+                    >
+                      <small>Forgot password?</small>
+                    </a>
+                  </div>
+                  <div className="w-1/2 text-right">
+                    <a
+                      href="#pablo"
+                      onClick={(e) => e.preventDefault()}
+                      className="text-gray-300"
+                    >
+                      <small>Create new account</small>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   );
-};
-
-export default Signup;
+}
