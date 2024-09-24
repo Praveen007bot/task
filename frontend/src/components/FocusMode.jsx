@@ -1,124 +1,91 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 
 const FocusMode = () => {
-  const [subtasks, setSubtasks] = useState([]);
-  const [newSubtask, setNewSubtask] = useState("");
-  const [timer, setTimer] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
+  const [time, setTime] = useState(0); // Time in seconds
+  const [isPaused, setIsPaused] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [customTime, setCustomTime] = useState('');
 
-  // Timer logic
+  // Timer Countdown
   useEffect(() => {
     let interval = null;
-    if (isRunning) {
+
+    if (isActive && !isPaused && time > 0) {
       interval = setInterval(() => {
-        setTimer((prevTime) => prevTime + 1);
+        setTime((prevTime) => prevTime - 1);
       }, 1000);
-    } else if (!isRunning && timer !== 0) {
-      clearInterval(interval);
+    } else if (time === 0 && isActive) {
+      setIsActive(false);
+      alert("Focus time completed!"); // Using alert instead of ToastAndroid
     }
+
     return () => clearInterval(interval);
-  }, [isRunning, timer]);
+  }, [isActive, isPaused, time]);
 
-  // Add a new subtask
-  const handleAddSubtask = () => {
-    if (newSubtask.trim() !== "") {
-      setSubtasks([...subtasks, { text: newSubtask, completed: false }]);
-      setNewSubtask("");
-    }
-  };
-
-  // Toggle subtask completion
-  const toggleSubtaskCompletion = (index) => {
-    const updatedSubtasks = subtasks.map((subtask, i) =>
-      i === index ? { ...subtask, completed: !subtask.completed } : subtask
-    );
-    setSubtasks(updatedSubtasks);
-  };
-
-  // Convert seconds to mm:ss format for the timer
+  // Convert seconds to mm:ss
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${sec
-      .toString()
-      .padStart(2, "0")}`;
+    const remainingSeconds = seconds % 60;
+    return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
+  // Start Timer
+  const startTimer = (minutes) => {
+    setTime(minutes * 60); // Convert minutes to seconds
+    setIsActive(true);
+    setIsPaused(false);
+  };
+
+  // Custom Time Handler
+  const handleCustomTime = () => {
+    const minutes = parseInt(customTime);
+    if (!isNaN(minutes) && minutes > 0) {
+      startTimer(minutes);
+      setCustomTime('');
+    } else {
+      alert("Please enter a valid number"); // Using alert instead of ToastAndroid
+    }
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen flex flex-col justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-2xl text-center">
-        <div className="mb-6">
-          <h4 className="text-xl font-semibold mb-4">
-            Focus Timer: {formatTime(timer)}
-          </h4>
-          <button
-            onClick={() => setIsRunning(!isRunning)}
-            className={`py-2 px-4 rounded ${
-              isRunning ? "bg-red-600" : "bg-blue-600"
-            } text-white mr-4`}
-          >
-            {isRunning ? "Pause" : "Start"}
-          </button>
-          <button
-            onClick={() => setTimer(0)}
-            className="py-2 px-4 bg-gray-500 text-white rounded"
-          >
-            Reset Timer
-          </button>
-        </div>
+    <div className="flex flex-col justify-center items-center p-8 bg-gradient-to-r from-purple-400 to-blue-500 h-screen text-white">
+      <h1 className="text-3xl font-bold mb-8">Focus Mode</h1>
+      
+      {/* Display Timer */}
+      <h2 className="text-6xl font-extrabold mb-10">{formatTime(time)}</h2>
 
-        <div className="mb-6">
-          <h4 className="text-xl font-semibold mb-4">Subtasks</h4>
-          <ul className="mb-4">
-            {subtasks.map((subtask, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center mb-2"
-              >
-                <span className={`${subtask.completed ? "line-through" : ""}`}>
-                  {subtask.text}
-                </span>
-                <button
-                  onClick={() => toggleSubtaskCompletion(index)}
-                  className={`py-1 px-2 rounded ${
-                    subtask.completed ? "bg-green-500" : "bg-gray-400"
-                  } text-white`}
-                >
-                  {subtask.completed ? "Completed" : "Mark as Done"}
-                </button>
-              </li>
-            ))}
-          </ul>
+      {/* Time Options */}
+      <div className="grid grid-cols-2 gap-4 mb-8 w-full max-w-lg">
+        <button className="bg-blue-600 hover:bg-blue-700 transition duration-200 p-4 rounded-lg shadow-lg" onClick={() => startTimer(15)}>15 Min</button>
+        <button className="bg-blue-600 hover:bg-blue-700 transition duration-200 p-4 rounded-lg shadow-lg" onClick={() => startTimer(30)}>30 Min</button>
+        <button className="bg-blue-600 hover:bg-blue-700 transition duration-200 p-4 rounded-lg shadow-lg" onClick={() => startTimer(60)}>1 Hr</button>
+        <button className="bg-blue-600 hover:bg-blue-700 transition duration-200 p-4 rounded-lg shadow-lg" onClick={() => startTimer(120)}>2 Hr</button>
+      </div>
 
-          <div className="flex mb-4">
-            <input
-              type="text"
-              className="w-full p-2 border rounded mr-2"
-              placeholder="New Subtask"
-              value={newSubtask}
-              onChange={(e) => setNewSubtask(e.target.value)}
-            />
-            <button
-              onClick={handleAddSubtask}
-              className="bg-blue-600 text-white py-2 px-4 rounded"
-            >
-              Add Subtask
-            </button>
-          </div>
-        </div>
+      {/* Custom Time Input */}
+      <div className="flex items-center mb-10 bg-white rounded-lg shadow-lg overflow-hidden">
+        <input
+          type="number"
+          className="border-none p-4 w-32 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={customTime}
+          onChange={(e) => setCustomTime(e.target.value)}
+          placeholder="Custom time (min)"
+        />
+        <button className="bg-blue-600 hover:bg-blue-700 transition duration-200 p-4 text-white rounded-lg" onClick={handleCustomTime}>Start</button>
+      </div>
 
-        <button
-          onClick={() => alert("Goal marked as complete!")}
-          className="bg-green-600 text-white py-2 px-6 rounded mb-4"
-        >
-          Mark Goal as Complete
+      {/* Control Buttons */}
+      <div className="flex justify-between w-full max-w-lg">
+        <button className="bg-red-600 hover:bg-red-700 transition duration-200 p-4 rounded-lg shadow-lg mx-2" onClick={() => setIsPaused(!isPaused)}>
+          {isPaused ? 'Resume' : 'Pause'}
         </button>
-        <Link to={"/"}>
-          <button className="bg-gray-500 text-white py-2 px-6 rounded ml-8">
-            Exit Focus Mode
-          </button>
-        </Link>
+
+        <button className="bg-red-600 hover:bg-red-700 transition duration-200 p-4 rounded-lg shadow-lg mx-2" onClick={() => {
+          setIsActive(false);
+          setTime(0);
+        }}>
+          Cancel
+        </button>
       </div>
     </div>
   );

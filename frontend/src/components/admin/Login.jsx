@@ -36,7 +36,7 @@ export default function AdminLogin() {
         formData
       );
       if (res.data.success) {
-        navigate("/admin");
+        navigate("/admin/home");
         toast.success(res.data.message);
         console.log(res.data);
         dispatch(setAuthAdmin(res.data?.admin))
