@@ -92,3 +92,16 @@ export const logout = async (req, res) => {
   }
 };
 
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, '-password'); // Exclude the password field
+    
+    res.status(200).json(users); // Send back the users without password
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
+
+
