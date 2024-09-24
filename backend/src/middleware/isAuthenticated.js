@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 export const isAunthenticated = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const token = req.cookies.userToken;
     
     if (!token) {
       return res.status(400).json({ message: "User not authenticated" });
@@ -10,6 +10,7 @@ export const isAunthenticated = async (req, res, next) => {
     if (!decode) {
       return res.status(401).json({ message: "token not verified" });
     }
+    
     
     req.id = decode.userId;
 

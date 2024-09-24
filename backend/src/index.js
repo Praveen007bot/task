@@ -1,10 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import cookieParser from 'cookie-parser'
+import cookieParser from "cookie-parser";
 import connnectDb from "./db/db.js";
 import userRoute from "./routes/userRoutes.js";
 import goalroute from "./routes/goalRoutes.js";
+import adminRoute from "./routes/adminRoutes.js";
 
 dotenv.config({});
 
@@ -23,6 +24,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/goal", goalroute);
+app.use("/api/v1/admin", adminRoute);
 
 app.listen(PORT, () => {
   connnectDb();

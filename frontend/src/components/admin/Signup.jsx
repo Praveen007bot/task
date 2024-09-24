@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import registerBg from "../assets/img/register_bg_2.png";
+import registerBg from "../../assets/img/register_bg_2.png";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { setAuthUser } from "../redux/userSlice";
 
-export default function Login() {
-  const dispatch = useDispatch()
+export default function AdminSignup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    username: "",
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
-
 
   const handleChange = (e) => {
     setFormData({
@@ -32,33 +29,22 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/login",
-        formData,
-        { withCredentials: true } // Ensure cookies are sent with the request
+        "http://localhost:8000/api/v1/admin/register",
+        formData
       );
-      
       if (res.data.success) {
-        // Navigate and notify success
-        navigate("/");
+        navigate("/login");
         toast.success(res.data.message);
-  
-        // Dispatch the authenticated user to the Redux store
-        dispatch(setAuthUser(res.data.user));
-  
-        console.log(res.data); // Optional: logging the response for debugging
       } else {
-        // Handle login failure
-        toast.error(res.data.message || "Login failed");
+        toast.error(res.data.message || "Signup failed");
       }
     } catch (error) {
-      // Handle request error
-      toast.error("An error occurred while logging in.");
+      toast.error("An error occurred while Signup in.");
       console.log(error);
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <>
@@ -91,7 +77,7 @@ export default function Login() {
                         <img
                           alt="..."
                           className="w-5 mr-1"
-                          src={require("../assets/img/github.svg").default}
+                          src={require("../../assets/img/github.svg").default}
                         />
                         Github
                       </button>
@@ -103,7 +89,7 @@ export default function Login() {
                         <img
                           alt="..."
                           className="w-5 mr-1"
-                          src={require("../assets/img/google.svg").default}
+                          src={require("../../assets/img/google.svg").default}
                         />
                         Google
                       </button>
@@ -115,6 +101,24 @@ export default function Login() {
                       <small>Or sign in with credentials</small>
                     </div>
                     <form onSubmit={handleSubmit}>
+                      <div className="relative w-full mb-3">
+                        <label
+                          className="block uppercase text-gray-700 text-xs font-bold mb-2"
+                          htmlFor="grid-password"
+                        >
+                          Username
+                        </label>
+                        <input
+                          type="username"
+                          name="username"
+                          value={formData.username}
+                          onChange={handleChange}
+                          className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+                          placeholder="Username"
+                          style={{ transition: "all .15s ease" }}
+                        />
+                      </div>
+
                       <div className="relative w-full mb-3">
                         <label
                           className="block uppercase text-gray-700 text-xs font-bold mb-2"
@@ -173,15 +177,35 @@ export default function Login() {
                           }`}
                           style={{ transition: "all .15s ease" }}
                         >
-                          {loading ? "Logging In..." : "Log In"}
+                          {loading ? "Signing In..." : "Sign In"}
                         </button>
                       </div>
                     </form>
                     <div className="flex flex-wrap mt-6">
-                      <div className="w-1/2 text-right">
-                        <small>Dont have an acocunt <Link to={'/signup'} className="text-blue-600 font-bold">Sign up</Link></small>
+                      <div className=" text-right">
+                        <small>Already have an account <Link className="text-blue-600 font-bold" to={'/admin/login'}>Login</Link></small>
                       </div>
                     </div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap mt-6">
+                  <div className="w-1/2">
+                    <a
+                      href="#pablo"
+                      onClick={(e) => e.preventDefault()}
+                      className="text-gray-300"
+                    >
+                      <small>Forgot password?</small>
+                    </a>
+                  </div>
+                  <div className="w-1/2 text-right">
+                    <a
+                      href="#pablo"
+                      onClick={(e) => e.preventDefault()}
+                      className="text-gray-300"
+                    >
+                      <small>Create new account</small>
+                    </a>
                   </div>
                 </div>
               </div>

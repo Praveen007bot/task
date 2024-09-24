@@ -17,6 +17,7 @@ export default function Profile() {
       const res = await axios.get("http://localhost:8000/api/v1/user/logout");
       if (res.data.success) {
         dispatch({ type: "RESET_STATE" });
+        localStorage.removeItem("userToken"); // or whichever key you use for storing token
         navigate("/login");
         console.log(res.data.message);
       }

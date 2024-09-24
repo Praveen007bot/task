@@ -10,11 +10,20 @@ const goalSlice = createSlice({
     setGoals: (state, action) => {
       state.goals = action.payload;
     },
+    updateGoal: (state, action) => {
+      const updatedGoal = action.payload;
+      // Ensure goals is not null and then map through to update the specific goal
+      if (state.goals) {
+        state.goals = state.goals.map((goal) =>
+          goal._id === updatedGoal._id ? updatedGoal : goal
+        );
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase("RESET_STATE", () => initialState);
   },
 });
 
-export const { setGoals } = goalSlice.actions;
+export const { setGoals, updateGoal } = goalSlice.actions;
 export default goalSlice.reducer;

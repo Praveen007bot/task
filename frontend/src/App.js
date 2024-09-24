@@ -10,6 +10,9 @@ import FocusMode from "./components/FocusMode";
 import Profile from "./components/Profile";
 import History from "./components/History";
 import About from "./components/About";
+import AdminSignup from "./components/admin/Signup";
+import AdminLogin from "./components/admin/Login";
+import AdminHome from "./components/admin/Home";
 
 function App() {
   return (
@@ -25,7 +28,10 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path='/history' element={<History />} />
           <Route path='/about' element={<About />} />
-        </Routes>
+          <Route path="/admin/signup" element={<AdminSignup />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminHome />} />
+         </Routes>
       </BrowserRouter>
     </div>
   );

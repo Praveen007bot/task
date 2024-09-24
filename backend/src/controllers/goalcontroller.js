@@ -4,6 +4,8 @@ import { User } from "../models/user.js";
 export const addGoal = async (req, res) => {
   try {
     const userId = req.id;
+    console.log(userId);
+    
     const { title, description, category, duration } = req.body;
 
     if (!(title && description && category && duration)) {
@@ -25,7 +27,24 @@ export const addGoal = async (req, res) => {
       userId,
     });
 
-    await User.findByIdAndUpdate(userId, { $push: { goals: newGoal } });
+
+    const user = await User.findById(userId);
+    console.log(user);
+    
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { goals: newGoal._id } },
+      { new: true } // This returns the updated user object
+    );
+
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
+    }
+
+    console.log("Updated User:", updatedUser); 
 
     return res.status(200).json({
       message: "Goal added successfully.",
@@ -106,9 +125,17 @@ export const editGoal = async (req, res) => {
 
 export const deleteGoal = async (req, res) => {
   try {
+    const userId = req.id;
     const { goalId } = req.body;
     const goal = await Goal.findById(goalId);
     await Goal.deleteOne(goal);
+
+    const user = await User.findById(userId);
+    if (user) {
+      user.goals = user.goals.filter(goal => goal.toString() !== goalId); 
+      await user.save(); 
+    }
+
     return res
       .status(200)
       .json({ message: "Goal deleted successfully", success: true });

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import registerBg from "../assets/img/register_bg_2.png";
+import registerBg from "../../assets/img/register_bg_2.png";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { setAuthUser } from "../redux/userSlice";
+import { setAuthAdmin } from "../../redux/adminSlice";
 
-export default function Login() {
+export default function AdminLogin() {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -32,33 +32,26 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/login",
-        formData,
-        { withCredentials: true } // Ensure cookies are sent with the request
+        "http://localhost:8000/api/v1/admin/login",
+        formData
       );
-      
       if (res.data.success) {
-        // Navigate and notify success
-        navigate("/");
+        navigate("/admin");
         toast.success(res.data.message);
-  
-        // Dispatch the authenticated user to the Redux store
-        dispatch(setAuthUser(res.data.user));
-  
-        console.log(res.data); // Optional: logging the response for debugging
+        console.log(res.data);
+        dispatch(setAuthAdmin(res.data?.admin))
+        
+        
       } else {
-        // Handle login failure
         toast.error(res.data.message || "Login failed");
       }
     } catch (error) {
-      // Handle request error
       toast.error("An error occurred while logging in.");
       console.log(error);
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <>
@@ -91,7 +84,7 @@ export default function Login() {
                         <img
                           alt="..."
                           className="w-5 mr-1"
-                          src={require("../assets/img/github.svg").default}
+                          src={require("../../assets/img/github.svg").default}
                         />
                         Github
                       </button>
@@ -103,7 +96,7 @@ export default function Login() {
                         <img
                           alt="..."
                           className="w-5 mr-1"
-                          src={require("../assets/img/google.svg").default}
+                          src={require("../../assets/img/google.svg").default}
                         />
                         Google
                       </button>
@@ -179,7 +172,7 @@ export default function Login() {
                     </form>
                     <div className="flex flex-wrap mt-6">
                       <div className="w-1/2 text-right">
-                        <small>Dont have an acocunt <Link to={'/signup'} className="text-blue-600 font-bold">Sign up</Link></small>
+                        <small>Dont have an acocunt <Link to={'/admin/signup'} className="text-blue-600 font-bold">Sign up</Link></small>
                       </div>
                     </div>
                   </div>
