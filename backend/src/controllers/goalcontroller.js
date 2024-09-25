@@ -48,8 +48,6 @@ export const addGoal = async (req, res) => {
         .json({ message: "User not found", success: false });
     }
 
-    console.log("Updated User:", updatedUser);
-
     // Respond with success message and new goal
     return res.status(200).json({
       message: "Goal added successfully.",

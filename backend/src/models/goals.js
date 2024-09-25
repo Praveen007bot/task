@@ -32,10 +32,21 @@ const GoalSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    category:{
+        type: String,
+        required: true,
+    },
+    status:{
+        type: String,
+        default: "pending",
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     subGoals: [SubGoalSchema], // Array of sub-goals
   },
   { timestamps: true }
 );
 
 export const Goal = mongoose.model("Goal", GoalSchema);
-

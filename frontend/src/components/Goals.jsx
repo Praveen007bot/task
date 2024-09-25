@@ -17,6 +17,7 @@ const Goals = () => {
         },
         withCredentials: true,
       });
+      
       dispatch(setGoals(res.data?.goals));
     } catch (error) {
       console.log(error);

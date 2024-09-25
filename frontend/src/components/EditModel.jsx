@@ -1,103 +1,97 @@
+import React, { useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { RxCross2 } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { updateGoal } from "../redux/goalSlice";
 
-const EditModel = ({ onClose, goal }) => {
-  const navigate = useNavigate();
+const EditModel = ({ goal, onClose }) => {
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState(goal.title);
+  const [description, setDescription] = useState(goal.description);
+  const [category, setCategory] = useState(goal.category);
 
-  const [goalTitle, setGoalTitle] = useState(goal?.title || "");
-  const [goalDescription, setGoalDescription] = useState(goal?.description || "");
-  const [goalCategory, setGoalCategory] = useState(goal?.category || "");
-  const [goalDuration, setGoalDuration] = useState(goal?.duration || "");
-
-  useEffect(() => {
-    console.log("Goal prop changed:", goal);
-    if (goal) {
-      setGoalTitle(goal.title || "");
-      setGoalDescription(goal.description || "");
-      setGoalCategory(goal.category || "");
-      setGoalDuration(goal.duration || "");
-    }
-  }, [goal]);
-
-  const handleSubmit = async (e) => {
+  const handleUpdateGoal = async (e) => {
     e.preventDefault();
-    const updatedGoal = {
-      title: goalTitle,
-      description: goalDescription,
-      category: goalCategory,
-      duration: goalDuration,
-      goalId: goal._id,  // Keep the goal's ID for backend reference
-    };
-
     try {
       const res = await axios.put(
-        "http://localhost:8000/api/v1/goal/edit",
-        updatedGoal,
+        "http://localhost:8000/api/v1/goal/update",
+        { goalId: goal._id, title, description, category },
         {
           headers: {
-            "Content-type": "application/json",
+            "Content-Type": "application/json",
           },
           withCredentials: true,
         }
       );
-      
+
       if (res.data?.success) {
-        toast.success(res.data?.message);
-        navigate("/goals");  // Navigate to the Goals page after success
+        dispatch(updateGoal(res.data?.goal)); // Update the goal in the Redux store
+        toast.success(res.data.message);
+        onClose(); // Close the modal after successful update
       }
     } catch (error) {
-      console.error("Failed to update goal:", error);
-      toast.error("Failed to update goal.");
+      console.error(error);
+      toast.error(error.response?.data?.message);
     }
   };
 
   return (
-    <div className="flex fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm">
-      <div className="flex flex-col items-center justify-center m-auto bg-white h-fit p-8 rounded-lg">
-        <div onClick={onClose} className="place-self-end mb-4 cursor-pointer">
-          <RxCross2 size={30} />
-        </div>
-        <form key={goal?._id || 'new-goal'} className="flex flex-col gap-y-4" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Title"
-            value={goalTitle}
-            onChange={(e) => setGoalTitle(e.target.value)}
-            className="outline-none border-black border-2 p-2 rounded-md"
-          />
-          <input
-            type="text"
-            placeholder="Description"
-            value={goalDescription}
-            onChange={(e) => setGoalDescription(e.target.value)}
-            className="outline-none border-black border-2 p-2 rounded-md"
-          />
-          <select
-            className="outline-none border-black border-2 p-2 rounded-md bg-white"
-            value={goalCategory}
-            onChange={(e) => setGoalCategory(e.target.value)}
-            required
-          >
-            <option value="">Select Category</option>
-            <option value="Coding">Coding</option>
-            <option value="Gaming">Gaming</option>
-            <option value="Studying">Studying</option>
-            <option value="Finance">Finance</option>
-            <option value="Personal Development">Personal Development</option>
-          </select>
-          <input
-            type="number"
-            value={goalDuration}
-            placeholder="Duration"
-            onChange={(e) => setGoalDuration(e.target.value)}
-            className="outline-none border-black border-2 p-2 rounded-md"
-          />
-          <button className="px-4 py-2 bg-green-400 rounded-md" type="submit">
-            Edit
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-11/12 md:w-1/3">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-bold text-white">Edit Goal</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-300">
+            <FaTimes />
           </button>
+        </div>
+        <form onSubmit={handleUpdateGoal}>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-300">Goal Title</label>
+            <input
+              type="text"
+              className="input input-bordered w-full text-white bg-gray-700"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-300">Description</label>
+            <textarea
+              className="input input-bordered w-full text-white bg-gray-700"
+              rows="3"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-300">Category</label>
+            <select
+              className="select select-bordered w-full bg-gray-700 text-white"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              <option value="">Select Category</option>
+              <option value="Coding">Coding</option>
+              <option value="Gaming">Gaming</option>
+              <option value="Studying">Studying</option>
+              <option value="Finance">Finance</option>
+              <option value="Personal Development">
+                Personal Development
+              </option>
+            </select>
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="btn btn-primary w-full bg-blue-600 text-white hover:bg-blue-500"
+            >
+              Update Goal
+            </button>
+          </div>
         </form>
       </div>
     </div>
