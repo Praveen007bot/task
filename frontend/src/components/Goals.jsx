@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setGoals } from "../redux/goalSlice";
 import GoalItem from "./GoalItem";
+import store from "../redux/store";
 
 const Goals = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Goals = () => {
   };
   useEffect(() => {
     getAllGoals();
-  }, [goals]);
+  }, [goals, store]);
 
   
 

@@ -1,31 +1,41 @@
-import mongoose from "mongoose";    
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
-const goalSchema = new mongoose.Schema({
+// SubGoal Schema
+const SubGoalSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+});
+
+// Main Goal Schema
+const GoalSchema = new Schema(
+  {
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
-        required: true
-    },
-    category: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     duration: {
-        type: Number,
-        required: true
+      type: Number, // In days or any unit
+      required: true,
     },
-    status: {
-        type: String,
-        enum: ['pending', 'completed', 'in-progress'],
-        default: "pending"
+    isFavorite: {
+      type: Boolean,
+      default: false,
     },
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }
-},{timestamps: true})
+    subGoals: [SubGoalSchema], // Array of sub-goals
+  },
+  { timestamps: true }
+);
 
-export const Goal = mongoose.model('Goal', goalSchema);
+export const Goal = mongoose.model("Goal", GoalSchema);
+

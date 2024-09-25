@@ -3,58 +3,65 @@ import { User } from "../models/user.js";
 
 export const addGoal = async (req, res) => {
   try {
-    const userId = req.id;
-    console.log(userId);
-    
-    const { title, description, category, duration } = req.body;
+    const userId = req.id; // Get the user ID from the request
+    const { title, description, category, subGoals } = req.body;
 
-    if (!(title && description && category && duration)) {
+    // Check for required fields
+    if (!(title && description && category && subGoals)) {
       return res
         .status(400)
         .json({ message: "All fields are required", success: false });
     }
+
+    // Check for existing goal
     const existingGoal = await Goal.findOne({ title });
     if (existingGoal) {
       return res
         .status(401)
-        .json({ message: "goal already exist", success: false });
+        .json({ message: "Goal already exists", success: false });
     }
+
+    // Calculate the duration based on the number of sub-goals
+    const duration = subGoals.length;
+
+    // Create a new goal with sub-goals
     const newGoal = await Goal.create({
       title,
       description,
       category,
-      duration,
+      duration, // Set duration based on the number of sub-goals
       userId,
+      subGoals, // Include sub-goals in the new goal
     });
 
-
-    const user = await User.findById(userId);
-    console.log(user);
-    
-
+    // Update user's goals array
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $push: { goals: newGoal._id } },
       { new: true } // This returns the updated user object
     );
 
+    // Check if the user was updated
     if (!updatedUser) {
       return res
         .status(404)
         .json({ message: "User not found", success: false });
     }
 
-    console.log("Updated User:", updatedUser); 
+    console.log("Updated User:", updatedUser);
 
+    // Respond with success message and new goal
     return res.status(200).json({
       message: "Goal added successfully.",
       goal: newGoal,
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return res.status(500).json({ message: "Server error", success: false });
   }
 };
+
 
 export const getAllGoals = async (req, res) => {
   try {

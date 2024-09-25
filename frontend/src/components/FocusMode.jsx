@@ -63,10 +63,10 @@ const FocusMode = () => {
       </div>
 
       {/* Custom Time Input */}
-      <div className="flex items-center mb-10 bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="flex items-center mb-10  rounded-lg shadow-lg overflow-hidden">
         <input
           type="number"
-          className="border-none p-4 w-32 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border-none p-4 w-36 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mr-10"
           value={customTime}
           onChange={(e) => setCustomTime(e.target.value)}
           placeholder="Custom time (min)"

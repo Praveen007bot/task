@@ -28,23 +28,51 @@ const History = () => {
       <Header />
       <div className="flex flex-col items-center justify-center mt-10">
         <div className="font-bold text-4xl mb-10">History</div>
-        <table className="border-2 border-black w-[50%]">
-          <tr className="flex justify-between items-center px-4 text-xl border-b-2 border-black">
-            <th>Title</th>
-            <th>Description</th>
-            <th>Status</th>
-          </tr>
-          {goal.map((goal) => (
-            <tr
-              key={goal._id}
-              className="flex items-center justify-between px-4"
-            >
-              <td>{goal.title}</td>
-              <td>{goal.description}</td>
-              <td>{goal.status}</td>
-            </tr>
-          ))}
-        </table>
+
+        <div class="relative overflow-x-auto">
+          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="px-6 py-3">
+                  Gole title
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  goal description
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  category
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  duration
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {goal.map((goal) => (
+                <>
+                  <tr
+                    key={goal._id}
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <th
+                      scope="row"
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {goal.title}
+                    </th>
+                    <td class="px-6 py-4">{goal.description}</td>
+                    <td class="px-6 py-4">{goal.category}</td>
+                    <td class="px-6 py-4">{goal.duration}</td>
+                    <td class="px-6 py-4">{goal.status}</td>
+                  </tr>
+                </>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

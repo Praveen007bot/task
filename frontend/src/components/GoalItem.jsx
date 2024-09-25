@@ -63,7 +63,7 @@ const GoalItem = ({ goal }) => {
   };
 
   return (
-    <div className="bg-white p-4 border rounded-lg">
+    <div className=" text-white p-4 border rounded-lg">
       <div className="flex justify-end ">
         <div
           onClick={() => {
@@ -71,7 +71,7 @@ const GoalItem = ({ goal }) => {
           }}
           className="bg-gray-200 p-3 rounded-full cursor-pointer"
         >
-          <FaRegEdit className="flex justify-end" />
+          <FaRegEdit className="flex justify-end text-black" />
         </div>
       </div>
       <h5 className="text-xl font-bold mb-2">{goal.title}</h5>

@@ -16,6 +16,7 @@ import AdminHome from "./components/admin/Home";
 import Users from "./components/admin/Users";
 import Charts from "./components/admin/Charts";
 import AdminProfile from "./components/admin/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -25,11 +26,31 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/addgoal" element={<AddGoals />} />
-          <Route path="/goals" element={<Goals />} />
-          <Route path="/focusmode" element={<FocusMode />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path='/history' element={<History />} />
+          <Route path="/addgoal" element={
+              <ProtectedRoute>
+                <AddGoals />
+              </ProtectedRoute>
+            } />
+            <Route path="/goals" element={
+              <ProtectedRoute>
+                <Goals />
+              </ProtectedRoute>
+            } />
+            <Route path="/focusmode" element={
+              <ProtectedRoute>
+                <FocusMode />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path='/history' element={
+              <ProtectedRoute>
+                <History />
+              </ProtectedRoute>
+            } />
           <Route path='/about' element={<About />} />
           <Route path="/admin/signup" element={<AdminSignup />} />
           <Route path="/admin/login" element={<AdminLogin />} />
