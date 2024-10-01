@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
-  const {authUser} = useSelector(store => store.user)
+  const { authUser } = useSelector((store) => store.user);
   useEffect(() => {
     if (authUser) {
       setIsLogin(true);
@@ -12,12 +12,14 @@ export default function Navbar(props) {
       setIsLogin(false);
     }
   }, [authUser]);
-  
 
   const [isLogin, setIsLogin] = useState(false);
 
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
 
   return (
     <nav
@@ -172,14 +174,6 @@ export default function Navbar(props) {
                 }
                 href="#pablo"
               >
-                <i
-                  className={
-                    (props.transparent
-                      ? "lg:text-gray-300 text-gray-500"
-                      : "text-gray-500") +
-                    " fa-solid fa-bell text-lg leading-lg "
-                  }
-                />
                 <span className="lg:hidden inline-block ml-2">Star</span>
               </a>
             </li>
@@ -198,7 +192,6 @@ export default function Navbar(props) {
                       type="button"
                       style={{ transition: "all .15s ease" }}
                     >
-                      
                       <i className=" mr-4 fas fa-user"></i>
                       {authUser.username}
                     </button>
@@ -207,22 +200,32 @@ export default function Navbar(props) {
               </>
             ) : (
               <>
-                <li className="flex items-center">
-                  <Link to={"/login"}>
-                    <button
-                      className={
-                        (props.transparent
-                          ? "bg-white text-gray-800 active:bg-gray-100"
-                          : "bg-pink-500 text-white active:bg-pink-600") +
-                        " text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3"
-                      }
-                      type="button"
-                      style={{ transition: "all .15s ease" }}
-                    >
-                      login{" "}
-                      <i className=" ml-2 fas fa-arrow-alt-circle-right"></i>
-                    </button>
-                  </Link>
+                <li className="flex items-center relative">
+                  <button
+                    className={
+                      (props.transparent
+                        ? "bg-white text-gray-800 active:bg-gray-100"
+                        : "bg-pink-500 text-white active:bg-pink-600") +
+                      " text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3"
+                    }
+                    type="button"
+                    style={{ transition: "all .15s ease" }}
+                    onClick={toggleDropdown}
+                  >
+                    Login <i className="ml-2 fas fa-arrow-alt-circle-right"></i>
+                  </button>
+
+                  {/* Dropdown */}
+                  {dropdownVisible && (
+                    <ul className="absolute mt-10 w-40 bg-white border rounded-lg shadow-lg">
+                      <li className="px-4 py-2 hover:bg-gray-100 text-black">
+                        <Link to="/login">User</Link>
+                      </li>
+                      <li className="px-4 py-2 hover:bg-gray-100 text-black">
+                        <Link to="admin">Admin</Link>
+                      </li>
+                    </ul>
+                  )}
                 </li>
               </>
             )}

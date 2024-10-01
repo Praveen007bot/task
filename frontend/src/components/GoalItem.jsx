@@ -95,7 +95,7 @@ const GoalItem = ({ goal }) => {
         {goal.subGoals.length === 1 ? "sub-goal" : "sub-goals"}
       </p>
       <p className="mb-4">{goal.description}</p>
-      <div className="flex space-x-4">
+      <div className="mx-auto space-x-4">
         <button
           className="btn btn-error"
           onClick={handleDelete}

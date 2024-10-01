@@ -93,7 +93,7 @@ const AddGoals = () => {
     <>
       <Header />
       <section className="h-screen py-16 bg-gray-900">
-        <div className="container mx-auto text-center">
+        <div className="container mx-auto text-center w-[40%]">
           <h3 className="text-4xl font-bold text-white mb-8">Add Your Goal</h3>
 
           {/* Add Goal Form */}

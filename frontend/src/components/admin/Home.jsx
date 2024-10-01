@@ -1,6 +1,7 @@
 import React from "react";
 import Sidebar from "./Sidebar/Sidebar";
 import { Link } from "react-router-dom";
+import background from "../../assets/img/admin_background.jpg"
 
 const AdminHome = () => {
   return (
@@ -11,9 +12,9 @@ const AdminHome = () => {
       </div>
 
       {/* Main Content Section */}
-      <div className="flex-1 p-6 bg-gray-100">
+      <div style={{'--image-url': `url(${background})`}}  className="flex-1 p-6 bg-gray-100 bg-[image:var(--image-url)] bg-cover" >
         {/* You can add your main content here */}
-        <h1 className="text-3xl font-semibold">Welcome to Admin Dashboard</h1>
+        <h1 className="text-3xl font-semibold text-white">Welcome to Admin Dashboard</h1>
         <div className="flex gap-10 mt-10">
           <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#">
