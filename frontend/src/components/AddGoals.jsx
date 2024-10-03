@@ -12,7 +12,7 @@ const AddGoals = () => {
   const [goalTitle, setGoalTitle] = useState("");
   const [goalDescription, setGoalDescription] = useState("");
   const [goalCategory, setGoalCategory] = useState("");
-  const [goalDuration, setGoalDuration] = useState(0); // Initialize duration to 0
+  const [goalTimer, setGoalTimer] = useState(0); // Timer state
 
   // Sub-goal states
   const [subGoals, setSubGoals] = useState([{ title: "", description: "" }]);
@@ -29,7 +29,6 @@ const AddGoals = () => {
     if (subGoals.length < 5) {
       const newSubGoals = [...subGoals, { title: "", description: "" }];
       setSubGoals(newSubGoals);
-      setGoalDuration(newSubGoals.length); // Update duration immediately after adding
     }
   };
 
@@ -37,7 +36,14 @@ const AddGoals = () => {
   const removeSubGoal = (index) => {
     const newSubGoals = subGoals.filter((_, i) => i !== index);
     setSubGoals(newSubGoals);
-    setGoalDuration(newSubGoals.length); // Update duration after removal
+  };
+
+  // Start timer function
+  const startTimer = (duration) => {
+    const timerDuration = duration * 60 * 1000; // Convert minutes to milliseconds
+    setTimeout(() => {
+      toast.success(`Timer for ${goalTitle} is complete! 🎉`);
+    }, timerDuration);
   };
 
   // Handle form submission
@@ -58,7 +64,7 @@ const AddGoals = () => {
       title: goalTitle,
       description: goalDescription,
       category: goalCategory,
-      duration: goalDuration,
+      timer: goalTimer, // Include timer in the new goal
       subGoals,
     };
 
@@ -74,6 +80,8 @@ const AddGoals = () => {
         }
       );
       if (res.data?.success) {
+        // Start the timer after successfully adding the goal
+        startTimer(goalTimer);
         navigate("/Goals");
         toast.success(res.data?.message);
       }
@@ -86,7 +94,7 @@ const AddGoals = () => {
     setGoalTitle("");
     setGoalDescription("");
     setGoalCategory("");
-    setGoalDuration(0);
+    setGoalTimer(0); // Reset timer
     setSubGoals([{ title: "", description: "" }]);
   };
 
@@ -152,23 +160,20 @@ const AddGoals = () => {
               </select>
             </div>
 
-            {/* Goal Duration */}
+            {/* Goal Timer */}
             <div className="mb-6">
               <label className="block text-left mb-2 text-sm text-gray-300">
-                Goal Duration (should match the number of sub-goals)
+                Goal Timer (in minutes)
               </label>
               <input
                 type="number"
                 className="input input-bordered w-full text-white bg-gray-700"
-                value={goalDuration}
-                onChange={(e) => setGoalDuration(e.target.value)}
+                value={goalTimer}
+                onChange={(e) => setGoalTimer(e.target.value)}
                 min={0}
                 required
-                readOnly
               />
             </div>
-
-            
 
             {/* Sub-Goals Section */}
             <div className="mb-6">

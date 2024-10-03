@@ -24,7 +24,7 @@ export const addGoal = async (req, res) => {
     // Calculate the duration based on the number of sub-goals
     const duration = subGoals.length;
 
-    // Create a new goal with sub-goals
+    // Create a new goal with sub-goals and timer fields
     const newGoal = await Goal.create({
       title,
       description,
@@ -32,6 +32,8 @@ export const addGoal = async (req, res) => {
       duration, // Set duration based on the number of sub-goals
       userId,
       subGoals, // Include sub-goals in the new goal
+      totalTimeSpent: 0, // Initialize timer
+      lastStartTime: null, // Initialize last start time
     });
 
     // Update user's goals array
@@ -59,6 +61,7 @@ export const addGoal = async (req, res) => {
     return res.status(500).json({ message: "Server error", success: false });
   }
 };
+
 
 
 export const getAllGoals = async (req, res) => {
@@ -93,40 +96,61 @@ export const getSingleGoal = async (req, res) => {
 export const changeStatus = async (req, res) => {
   try {
     const { goalId, status } = req.body;
-    if (!(goalId && status)) {
-      return res
-        .status(404)
-        .json({ message: "field in missing", success: false });
+
+    // Validate input
+    if (!goalId || !status) {
+      return res.status(400).json({ message: "Fields are missing", success: false });
     }
-    await Goal.findByIdAndUpdate(goalId, { status });
 
-    const updatedGoal = await Goal.findById(goalId);
+    // Find the goal to ensure it exists
+    const goal = await Goal.findById(goalId);
+    if (!goal) {
+      return res.status(404).json({ message: "Goal not found", success: false });
+    }
 
-    return res.status(200).json({ message: "ok", updatedGoal, success: true });
+    // Update the goal's status
+    goal.status = status; // Update the status field
+    await goal.save(); // Save the updated goal
+
+    return res.status(200).json({ message: "Goal status updated successfully", updatedGoal: goal, success: true });
   } catch (error) {
-    console.log(error);
+    console.error("Error updating goal status:", error);
+    return res.status(500).json({ message: "An error occurred", success: false });
   }
 };
 
 export const editGoal = async (req, res) => {
   try {
     const { title, description, category, duration, goalId } = req.body;
+
+    console.log("Goal ID:", goalId); // <-- Log to check if goalId is received
+    console.log("Update data:", { title, description, category, duration }); // <-- Log update data
+
     const update = {
       title,
       description,
       category,
       duration,
     };
-    const goal = await Goal.findById(goalId);
-    await Goal.updateOne(update);
+
+    const updatedGoal = await Goal.findByIdAndUpdate(goalId, update, {
+      new: true, // Return the updated document
+    });
+
+    if (!updatedGoal) {
+      return res.status(404).json({ message: "Goal not found", success: false });
+    }
 
     return res
       .status(200)
-      .json({ message: "Goal updated successfully", success: true });
+      .json({ message: "Goal updated successfully", success: true, goal: updatedGoal });
   } catch (error) {
-    console.log(error);
+    console.error("Error updating goal:", error); // <-- Log backend error
+    return res.status(500).json({ message: "Internal server error", success: false });
   }
 };
+
+
 
 export const deleteGoal = async (req, res) => {
   try {

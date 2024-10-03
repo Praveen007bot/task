@@ -67,7 +67,8 @@ export const login = async (req, res) => {
         maxAge: 1 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: "None", // For cross-origin requests
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production", //process.env.NODE_ENV === "production"
+        
       })
       .json({ message: "Login successfully", user, success: true });
   } catch (error) {

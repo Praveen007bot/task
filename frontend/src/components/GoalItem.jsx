@@ -12,11 +12,6 @@ const GoalItem = ({ goal }) => {
   const [showModel, setShowModel] = useState(false);
 
   // Function to change the goal status
-  const handleButtonClick = () => {
-    changeStatus();
-  };
-
-  // Determine the new status for the goal
   const newStatus = goal.status === "pending" ? "completed" : "pending";
 
   // Function to change the goal status in the backend
@@ -34,13 +29,17 @@ const GoalItem = ({ goal }) => {
       );
 
       if (res.data?.success) {
-        dispatch(updateGoal(res.data?.goal));
+        dispatch(updateGoal(res.data.updatedGoal)); // Ensure you're dispatching the updated goal
         toast.success(res.data?.message);
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message);
+      toast.error(error.response?.data?.message || "Error updating status.");
     }
+  };
+
+  const handleButtonClick = () => {
+    changeStatus();
   };
 
   // Function to handle goal deletion

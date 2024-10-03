@@ -12,11 +12,20 @@ const EditModel = ({ goal, onClose }) => {
   const [description, setDescription] = useState(goal.description);
   const [category, setCategory] = useState(goal.category);
 
+  // List of categories for dynamic selection
+  const categories = [
+    "Coding",
+    "Gaming",
+    "Studying",
+    "Finance",
+    "Personal Development",
+  ];
+
   const handleUpdateGoal = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `${API_URL}/api/v1/goal/update`,
+        `${API_URL}/api/v1/goal/edit`,
         { goalId: goal._id, title, description, category },
         {
           headers: {
@@ -25,17 +34,22 @@ const EditModel = ({ goal, onClose }) => {
           withCredentials: true,
         }
       );
-
+  
+      console.log("Response from API:", res.data); // <-- log success response
+  
       if (res.data?.success) {
-        dispatch(updateGoal(res.data?.goal)); // Update the goal in the Redux store
+        dispatch(updateGoal(res.data?.goal));
         toast.success(res.data.message);
-        onClose(); // Close the modal after successful update
+        onClose();
+      } else {
+        toast.error("Failed to update goal. Try again.");
       }
     } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message);
+      console.error("Error updating goal:", error); // <-- log error
+      toast.error(error.response?.data?.message || "Failed to update goal");
     }
   };
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -76,13 +90,11 @@ const EditModel = ({ goal, onClose }) => {
               required
             >
               <option value="">Select Category</option>
-              <option value="Coding">Coding</option>
-              <option value="Gaming">Gaming</option>
-              <option value="Studying">Studying</option>
-              <option value="Finance">Finance</option>
-              <option value="Personal Development">
-                Personal Development
-              </option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </select>
           </div>
           <div className="flex justify-end">

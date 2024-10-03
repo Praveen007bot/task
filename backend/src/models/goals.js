@@ -32,19 +32,28 @@ const GoalSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    category:{
-        type: String,
-        required: true,
+    category: {
+      type: String,
+      required: true,
     },
-    status:{
-        type: String,
-        default: "pending",
+    status: {
+      type: String,
+      default: "pending",
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     subGoals: [SubGoalSchema], // Array of sub-goals
+
+    // Timer fields
+    totalTimeSpent: {
+      type: Number,
+      default: 0, // Time in hours
+    },
+    lastStartTime: {
+      type: Date, // Tracks when the timer was last started
+    },
   },
   { timestamps: true }
 );
