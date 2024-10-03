@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { updateGoal } from "../redux/goalSlice";
+import { API_URL } from "../constants/api";
 
 const EditModel = ({ goal, onClose }) => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const EditModel = ({ goal, onClose }) => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        "http://localhost:8000/api/v1/goal/update",
+        `${API_URL}/api/v1/goal/update`,
         { goalId: goal._id, title, description, category },
         {
           headers: {

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../constants/api";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function Profile() {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/user/logout");
+      const res = await axios.get(`${API_URL}/api/v1/user/logout`);
       if (res.data.success) {
         dispatch({ type: "RESET_STATE" });
         localStorage.removeItem("userToken"); // or whichever key you use for storing token

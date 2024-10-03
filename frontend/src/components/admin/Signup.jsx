@@ -3,6 +3,7 @@ import registerBg from "../../assets/img/register_bg_2.png";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { API_URL } from "../../constants/api";
 
 export default function AdminSignup() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export default function AdminSignup() {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/admin/register",
+        `${API_URL}/api/v1/admin/register`,
         formData
       );
       if (res.data.success) {

@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setGoals } from "../redux/goalSlice";
 import GoalItem from "./GoalItem";
 import store from "../redux/store";
+import { API_URL } from "../constants/api";
 
 const Goals = () => {
   const dispatch = useDispatch();
   const { goals } = useSelector((store) => store.goal);
   const getAllGoals = async (req, res) => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/goal", {
+      const res = await axios.get(`${API_URL}/api/v1/goal`, {
         headers: {
           "Content-type": "application/json",
         },

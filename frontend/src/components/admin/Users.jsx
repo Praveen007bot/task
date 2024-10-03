@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar/Sidebar";
 import axios from "axios";
+import { API_URL } from "../../constants/api";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const getAllGoals = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/user/", {
+      const res = await axios.get(`${API_URL}a/api/v1/user/`, {
         withCredentials: true,
       });
       setUsers(res.data);

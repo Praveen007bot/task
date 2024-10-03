@@ -2,14 +2,15 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import connnectDb from "./db/db.js";
-import userRoute from "./routes/userRoutes.js";
-import goalroute from "./routes/goalRoutes.js";
-import adminRoute from "./routes/adminRoutes.js";
+import connnectDb from "./src/db/db.js";
+import userRoute from "./src/routes/userRoutes.js";
+import goalroute from "./src/routes/goalRoutes.js";
+import adminRoute from "./src/routes/adminRoutes.js";
 
 dotenv.config({});
 
 const allowedOrigins = [
+  'https://goaltracker-9pc1.onrender.com',
   'http://192.168.128.174:8081',  // Expo development server URL
   'http://192.168.128.25:8081',   // Your physical device IP
   "http://localhost:3000"         // React frontend on localhost
@@ -20,15 +21,16 @@ const PORT = process.env.PORT || 8080;
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
-      return callback(new Error(msg), false);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   },
-  credentials: true // Enable credentials to allow cookies/credentials
+  credentials: true
 }));
+
+app.options('*', cors()); // Handle preflight
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -3,6 +3,7 @@ import Header from "./Header";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { API_URL } from "../constants/api";
 
 const AddGoals = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const AddGoals = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/goal/add",
+        `${API_URL}/api/v1/goal/add`,
         newGoal,
         {
           headers: {

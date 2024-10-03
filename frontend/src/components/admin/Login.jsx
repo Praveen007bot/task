@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setAuthAdmin } from "../../redux/adminSlice";
+import { API_URL } from "../../constants/api";
 
 export default function AdminLogin() {
   const dispatch = useDispatch()
@@ -32,7 +33,7 @@ export default function AdminLogin() {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/admin/login",
+        `${API_URL}/api/v1/admin/login`,
         formData
       );
       if (res.data.success) {

@@ -3,13 +3,14 @@ import axios from "axios";
 import Header from "./Header";
 import { FaTrash } from "react-icons/fa"; // Import the delete icon
 import toast from "react-hot-toast";
+import { API_URL } from "../constants/api";
 
 const History = () => {
   const [goals, setGoals] = useState([]);
 
   const getCompletedGoals = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/goal/", {
+      const res = await axios.get(`${API_URL}/api/v1/goal/`, {
         headers: {
           "Content-type": "application/json",
         },
@@ -25,7 +26,7 @@ const History = () => {
     try {
       const res = await axios.request({
         method: "DELETE",
-        url: "http://localhost:8000/api/v1/goal/delete",
+        url: `${API_URL}/api/v1/goal/delete`,
         data: { goalId }, // Pass goalId in request body
         headers: {
           "Content-type": "application/json",

@@ -5,6 +5,7 @@ import Logo from "../../../assets/img/google.svg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import { API_URL } from "../../../constants/api";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/admin/logout");
+      const res = await axios.get(`${API_URL}/api/v1/admin/logout`);
       if (res.data.success) {
         dispatch({ type: "RESET_STATE" });
         localStorage.removeItem("adminToken"); // or whichever key you use for storing token

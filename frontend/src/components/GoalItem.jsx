@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import EditModel from "./EditModel";
 import { useDispatch } from "react-redux";
 import { updateGoal } from "../redux/goalSlice";
+import { API_URL } from "../constants/api";
 
 const GoalItem = ({ goal }) => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const GoalItem = ({ goal }) => {
   const changeStatus = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/goal/changestatus",
+        `${API_URL}/api/v1/goal/changestatus`,
         { goalId: goal._id, status: newStatus }, // Use newStatus instead of status
         {
           headers: {
@@ -52,7 +53,7 @@ const GoalItem = ({ goal }) => {
     try {
       const res = await axios.request({
         method: "DELETE",
-        url: "http://localhost:8000/api/v1/goal/delete",
+        url: `${API_URL}/api/v1/goal/delete`,
         data: { goalId: goal._id }, // Pass goalId in request body
         headers: {
           "Content-type": "application/json",

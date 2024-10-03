@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { API_URL } from '../../constants/api'
 
 const AdminProfile = () => {
 
@@ -15,7 +16,7 @@ const AdminProfile = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/admin/logout");
+      const res = await axios.get(`${API_URL}/api/v1/admin/logout`);
       if (res.data.success) {
         dispatch({ type: "RESET_STATE" });
         localStorage.removeItem("adminToken"); // or whichever key you use for storing token
