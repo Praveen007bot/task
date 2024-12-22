@@ -13,11 +13,13 @@ const allowedOrigins = [
   'https://goaltracker-9pc1.onrender.com',
   'http://192.168.128.174:8081',  // Expo development server URL
   'http://192.168.128.25:8081',   // Your physical device IP
-  "http://localhost:3000"         // React frontend on localhost
+  "http://localhost:3000" ,      // React frontend on localhost
+  "http://3.213.12.236:80",
+  "http://3.213.12.236"
 ];
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -35,6 +37,10 @@ app.options('*', cors()); // Handle preflight
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.get('/', (req, res) => {
+  res.send("Backend is working!");
+});
 
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/goal", goalroute);
